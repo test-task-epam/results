@@ -1,0 +1,8 @@
+---
+- name: Insert a rule for opening 80 port
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: '80'
+    jump: ACCEPT
+    action: insert

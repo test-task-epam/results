@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become:
+    true
+  become_method:
+    su
+  become_user:
+    root
+  remote_user:
+    root
+  roles:
+   - conf-nginx-update
+   - service-nginx-restart

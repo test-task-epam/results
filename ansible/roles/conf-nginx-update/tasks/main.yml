@@ -1,0 +1,7 @@
+---
+- name: Copy config files
+  copy:
+    src  : /var/lib/jenkins/workspace/nginx-config-updating/config/
+    dest : /etc/nginx
+    owner: root
+    group: root
