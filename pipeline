@@ -1,0 +1,41 @@
+pipeline {
+   agent any
+  
+     stages {
+
+        stage('get configs files from git') {
+            steps {
+                     checkout scm
+                  }
+        }
+       
+        stage('check connectivity to servers') {
+            steps {
+                     withCredentials([
+                     file(credentialsId: 'vault-pass-ansible', variable: 'PASSFILE')
+                     ]) {
+                          sh "ansible all -m ping --vault-password-file ${PASSFILE}"
+                        }
+               
+            }
+         }
+       
+         stage('check playbook syntax') {
+            steps {
+                     sh "ansible-playbook --syntax-check /etc/ansible/playbook_nginx_configs_update.yml"
+                  }
+          }
+       
+          stage('run playbook updating configs on slave servers') {
+            steps {
+                     withCredentials([
+                     file(credentialsId: 'vault-pass-ansible', variable: 'PASSFILE')
+                     ]) {
+                         sh "ansible-playbook /etc/ansible/playbook_nginx_configs_update.yml --vault-password-file ${PASSFILE}"
+                        }
+                  }
+          }
+
+
+    }
+}
